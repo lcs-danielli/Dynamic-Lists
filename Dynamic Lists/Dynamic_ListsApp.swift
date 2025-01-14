@@ -11,7 +11,7 @@ import SwiftUI
 struct Dynamic_ListsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootsCalculatorView()
         }
     }
 }
