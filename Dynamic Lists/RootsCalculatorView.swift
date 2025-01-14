@@ -12,6 +12,8 @@ struct RootsCalculatorView: View {
     @State var a: Double = 0.0
     @State var b: Double = 0.0
     @State var c: Double = 0.0
+    
+    @State var priorResult: [Result] = []
     var result: String{
         
         let discriminant = b * b - 4 * a * c
@@ -41,39 +43,61 @@ struct RootsCalculatorView: View {
                 
                 HStack{
                     Spacer()
-                    Text("a: 1.0")
+                    Text("\(a.formatted(.number.precision(.fractionLength(1))))")
                     Spacer()
-                    Text("b: -6.0")
+                    Text("\(b.formatted(.number.precision(.fractionLength(1))))")
                     Spacer()
-                    Text("c: 8.0")
+                    Text("\(c.formatted(.number.precision(.fractionLength(1))))")
                     Spacer()
                 }  .font(Font.custom("Times New Roman",
                                      size: 24.0,
                                      relativeTo: .body))
                 
                 HStack{
-                    Slider(value: $a, in: 1...100, step: 1)
+                    Slider(value: $a, in: 1...10, step: 1)
                         .padding(.horizontal)
-                    Slider(value: $b, in: 1...100, step: 1)
+                    Slider(value: $b, in: 1...10, step: 1)
                         .padding(.horizontal)
-                    Slider(value: $c, in: 1...100, step: 1)
+                    Slider(value: $c, in: 1...10, step: 1)
                         .padding(.horizontal)
                 }
                 
-                Text("x ≈ 2.00 and x ≈ 4.00")
+                Text("\(result)")
                     .font(Font.custom("Times New Roman",
                                        size: 24.0,
                                        relativeTo: .body))
+                Button(action: {
+                    let latestResult = Result(a:a, b:b, c:c, roots:result)
+                    priorResult.append(latestResult)
+                }, label: {
+                    Text("Save Result")
+                })
+                .buttonStyle(.bordered)
+                .padding()
+                
+                Spacer()
+                
+                VStack{
+                    HStack{
+                        Text("History")
+                            .font(.largeTitle)
+                            .bold()
+                        Spacer()
+                    }
+                }
+                List(priorResult.reversed()) {
+                    currentResult in
+                    HStack{
+                        Spacer()
+                        ResultView(somePriorResult: currentResult)
+                        Spacer()
+                    }
+                }
+                
                 
                 Spacer()
             }.navigationTitle("Find the Roots")
-            // A value that will be stored as a Double
-            let someValue = 3.14159
-             
-            // Create a string with this value rounded to one decimal place
-            let someFormattedValue = someValue.formatted(.number.precision(.fractionLength(1)))
-             
-            // someFormattedValue will contain 3.1
+    
         }
         .padding()
     }
